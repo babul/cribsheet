@@ -120,6 +120,21 @@ exists to avoid.
 - run: npx cribsheet check
 ```
 
+## Design notes
+
+The `docs/` folder in the repository carries the specification and the review that shaped it. They
+are not shipped in the npm package.
+
+- **[`docs/spec-v4.md`](docs/spec-v4.md)** — the specification, as implemented. Start here.
+- **[`docs/spec-v3.md`](docs/spec-v3.md)** — the review behind it. Read this when a behaviour looks
+  wrong and you want to know whether it was considered: why the hash is never normalised before
+  comparison, why four markdown contexts are protected rather than one, why unterminated fences
+  refuse while indented code is handled conservatively.
+- `docs/spec-v1.md` and `docs/spec-v2.md` are the superseded draft and first review, kept for
+  provenance.
+
+This repository manages its own `AGENTS.md` with cribsheet. The fragments are in `.ai/guidelines/`.
+
 ## What it does not do
 
 No templating, no project scanning, no network, no shipped defaults, no sibling output files. It
