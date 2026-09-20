@@ -204,11 +204,11 @@ is cosmetic; under-protecting corrupts. The scanner over-protects.
 ```markdown
 Hand-written preamble. Never touched.
 
-<!-- agents:begin -->
+<!-- cribsheet:begin -->
 === .ai/guidelines/00-foundation.md ===
 
 ...composed content...
-<!-- agents:end sha=a3f9c2e81b04 -->
+<!-- cribsheet:end sha=a3f9c2e81b04 -->
 
 Hand-written notes below. Also never touched.
 ```
@@ -223,11 +223,16 @@ Hand-written notes below. Also never touched.
 Markers must be **standalone lines**:
 
 ```
-/^\s*<!--\s*agents:begin\s*-->\s*$/
-/^\s*<!--\s*agents:end(?:\s+sha=([0-9a-f]+))?\s*-->\s*$/
+/^\s*<!--\s*cribsheet:begin\s*-->\s*$/
+/^\s*<!--\s*cribsheet:end(?:\s+sha=([0-9a-f]+))?\s*-->\s*$/
 ```
 
-The standalone-line requirement is what stops `` `<!-- agents:begin -->x<!-- agents:end -->` `` in a
+The marker names the tool, not the file's subject. `AGENTS.md` is a multi-tool convention, so a
+generic `agents:` marker invites a collision in which two tools claim the same block; a
+tool-specific one lets several coexist in one file. It also stays accurate when `output` points
+somewhere that is not an agents file at all.
+
+The standalone-line requirement is what stops `` `<!-- cribsheet:begin -->x<!-- cribsheet:end -->` `` in a
 code span from being read as a block. Detection also runs the §4.3.2 context scanner over the output
 file and **ignores markers inside fenced or HTML blocks**, so a file may document the marker syntax
 — including this specification, and cribsheet's own `AGENTS.md`.
@@ -237,8 +242,8 @@ Malformed marker sets are exit 3, not a guess:
 | Condition | Result |
 |---|---|
 | No markers at all | Not an error; §6.1 case 2 |
-| Two or more `agents:begin` | Exit 3 |
-| Two or more `agents:end` | Exit 3 |
+| Two or more `cribsheet:begin` | Exit 3 |
+| Two or more `cribsheet:end` | Exit 3 |
 | `begin` with no `end`, or `end` with no `begin` | Exit 3 |
 | `end` appearing before `begin` | Exit 3 |
 
@@ -618,6 +623,14 @@ Reasoning for each is in [`spec-v3.md`](spec-v3.md).
 - Symlink and case-variant-extension handling (§3.1).
 - ATX heading detector specified exactly; cap raised from `####` to `######` (§4.3.1).
 - Zero-dependency and Node 22 commitments (§9).
+
+**Changed after v4 was first written**
+
+- Markers renamed from `agents:begin` / `agents:end` to `cribsheet:begin` / `cribsheet:end`
+  (§5.2). Done before publication, when the only file carrying them was this repo's own
+  `AGENTS.md`. Deferring would have made it a migration: existing files would stop being
+  recognised and compile would append a second block below the unrecognised first one.
+  v1-v3 still show the old name; they record what was proposed and reviewed at the time.
 
 **Explicitly not changed**
 

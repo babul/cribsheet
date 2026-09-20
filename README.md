@@ -40,13 +40,13 @@ They compose into a marked block, leaving your own prose untouched:
 ```markdown
 Hand-written preamble. Never touched.
 
-<!-- agents:begin -->
+<!-- cribsheet:begin -->
 === .ai/guidelines/00-foundation.md ===
 
 # Foundation
 
 Always read the spec first.
-<!-- agents:end sha=b0fbee7a2e6d -->
+<!-- cribsheet:end sha=b0fbee7a2e6d -->
 
 Hand-written notes below. Also never touched.
 ```

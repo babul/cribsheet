@@ -20,16 +20,16 @@ test('no output file: create with the block', (t) => {
   const r = compile(cfg(root));
   t.assert.strictEqual(r.status, STATUS.NEW);
   const out = read(root);
-  t.assert.match(out, /^<!-- agents:begin -->/);
+  t.assert.match(out, /^<!-- cribsheet:begin -->/);
   t.assert.match(out, /=== \.ai\/guidelines\/00-a\.md ===/);
-  t.assert.match(out, /<!-- agents:end sha=[0-9a-f]{12} -->\n$/);
+  t.assert.match(out, /<!-- cribsheet:end sha=[0-9a-f]{12} -->\n$/);
 });
 
 test('output exists without markers: append at the end, preserving it', (t) => {
   const root = tmpProject({ [`${G}/00-a.md`]: 'body', 'AGENTS.md': 'Hand written.\n' });
   compile(cfg(root));
   const out = read(root);
-  t.assert.ok(out.startsWith('Hand written.\n\n<!-- agents:begin -->'));
+  t.assert.ok(out.startsWith('Hand written.\n\n<!-- cribsheet:begin -->'));
 });
 
 test('content before and after the block survives verbatim', (t) => {
@@ -76,7 +76,7 @@ test('--force overwrites a hand-edited block', (t) => {
 test('markers with no sha are refused with exit 2', (t) => {
   const root = tmpProject({
     [`${G}/00-a.md`]: 'body',
-    'AGENTS.md': '<!-- agents:begin -->\nstuff\n<!-- agents:end -->\n',
+    'AGENTS.md': '<!-- cribsheet:begin -->\nstuff\n<!-- cribsheet:end -->\n',
   });
   throwsWithCode(t, () => compile(cfg(root)), EXIT.REFUSED, /markers but no sha/);
 });
@@ -84,37 +84,37 @@ test('markers with no sha are refused with exit 2', (t) => {
 test('two begin markers are exit 3', (t) => {
   const root = tmpProject({
     [`${G}/00-a.md`]: 'body',
-    'AGENTS.md': '<!-- agents:begin -->\na\n<!-- agents:end sha=abc123abc123 -->\n<!-- agents:begin -->\n',
+    'AGENTS.md': '<!-- cribsheet:begin -->\na\n<!-- cribsheet:end sha=abc123abc123 -->\n<!-- cribsheet:begin -->\n',
   });
-  throwsWithCode(t, () => compile(cfg(root)), EXIT.ERROR, /2 agents:begin markers/);
+  throwsWithCode(t, () => compile(cfg(root)), EXIT.ERROR, /2 cribsheet:begin markers/);
 });
 
 test('an end marker before a begin marker is exit 3', (t) => {
   const root = tmpProject({
     [`${G}/00-a.md`]: 'body',
-    'AGENTS.md': '<!-- agents:end sha=abc123abc123 -->\ntext\n<!-- agents:begin -->\n',
+    'AGENTS.md': '<!-- cribsheet:end sha=abc123abc123 -->\ntext\n<!-- cribsheet:begin -->\n',
   });
-  throwsWithCode(t, () => compile(cfg(root)), EXIT.ERROR, /before agents:begin/);
+  throwsWithCode(t, () => compile(cfg(root)), EXIT.ERROR, /before cribsheet:begin/);
 });
 
 test('marker syntax inside a fence is documentation, not a block', (t) => {
   const root = tmpProject({
     [`${G}/00-a.md`]: 'body',
-    'AGENTS.md': 'Docs:\n\n```markdown\n<!-- agents:begin -->\n<!-- agents:end -->\n```\n',
+    'AGENTS.md': 'Docs:\n\n```markdown\n<!-- cribsheet:begin -->\n<!-- cribsheet:end -->\n```\n',
   });
   const r = compile(cfg(root));
   t.assert.strictEqual(r.status, STATUS.NEW); // appended, not matched
-  t.assert.match(read(root), /```markdown\n<!-- agents:begin -->/);
+  t.assert.match(read(root), /```markdown\n<!-- cribsheet:begin -->/);
 });
 
 test('a marker inside an inline code span is not matched', (t) => {
   const root = tmpProject({
     [`${G}/00-a.md`]: 'body',
-    'AGENTS.md': 'Example: `<!-- agents:begin -->sample<!-- agents:end -->` inline.\n',
+    'AGENTS.md': 'Example: `<!-- cribsheet:begin -->sample<!-- cribsheet:end -->` inline.\n',
   });
   const r = compile(cfg(root));
   t.assert.strictEqual(r.status, STATUS.NEW);
-  t.assert.match(read(root), /Example: `<!-- agents:begin -->sample/);
+  t.assert.match(read(root), /Example: `<!-- cribsheet:begin -->sample/);
 });
 
 test('empty guidelines dir with no output is NOOP, exit 0, no write', (t) => {

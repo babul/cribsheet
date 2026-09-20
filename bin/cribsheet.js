@@ -134,7 +134,7 @@ function warnOrphan(config, opts) {
   const defaultOutput = path.join(config.root, DEFAULTS.output);
   if (config.output === defaultOutput) return;
   const text = readOrNull(defaultOutput);
-  if (text && /<!--\s*agents:begin\s*-->/.test(text)) {
+  if (text && /<!--\s*cribsheet:begin\s*-->/.test(text)) {
     warn(`${DEFAULTS.output} still contains a managed block but output is "${path.relative(config.root, config.output)}". Agents will keep reading the stale one.`);
   }
 }

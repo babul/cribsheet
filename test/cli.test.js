@@ -77,8 +77,8 @@ test('--dry-run puts only the file on stdout and writes nothing', (t) => {
   const root = tmpProject({ [`${G}/00-a.md`]: 'body' });
   const r = runBoth(root, ['--dry-run']);
   t.assert.strictEqual(r.code, 0);
-  t.assert.match(r.stdout, /^<!-- agents:begin -->/);
-  t.assert.match(r.stdout, /<!-- agents:end sha=[0-9a-f]{12} -->\n$/);
+  t.assert.match(r.stdout, /^<!-- cribsheet:begin -->/);
+  t.assert.match(r.stdout, /<!-- cribsheet:end sha=[0-9a-f]{12} -->\n$/);
   t.assert.strictEqual(fs.existsSync(path.join(root, 'AGENTS.md')), false);
 });
 
@@ -86,7 +86,7 @@ test('--diff puts a unified diff on stdout and writes nothing', (t) => {
   const root = tmpProject({ [`${G}/00-a.md`]: 'body' });
   const r = runBoth(root, ['--diff']);
   t.assert.match(r.stdout, /^--- AGENTS\.md \(current\)/m);
-  t.assert.match(r.stdout, /^\+.*agents:begin/m);
+  t.assert.match(r.stdout, /^\+.*cribsheet:begin/m);
   t.assert.strictEqual(fs.existsSync(path.join(root, 'AGENTS.md')), false);
 });
 
@@ -146,7 +146,7 @@ test('init is exit 3 when .ai exists as a file', (t) => {
 test('an orphaned AGENTS.md block warns when output is elsewhere', (t) => {
   const root = tmpProject({
     [`${G}/00-a.md`]: 'body',
-    'AGENTS.md': '<!-- agents:begin -->\nold\n<!-- agents:end sha=abc123abc123 -->\n',
+    'AGENTS.md': '<!-- cribsheet:begin -->\nold\n<!-- cribsheet:end sha=abc123abc123 -->\n',
   });
   const r = runBoth(root, ['--output', 'docs/AGENTS.md']);
   t.assert.strictEqual(r.code, 0);
