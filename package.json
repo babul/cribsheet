@@ -2,14 +2,28 @@
   "name": "cribsheet",
   "version": "0.0.1",
   "description": "Compile AGENTS.md from reusable markdown fragments — without clobbering your hand edits.",
+  "private": true,
   "type": "module",
-  "bin": { "cribsheet": "bin/cribsheet.js" },
-  "exports": "./src/index.js",
-  "engines": { "node": ">=22" },
-  "files": ["bin", "src", "README.md"],
-  "scripts": {
-    "test": "node --test test/"
+  "bin": {
+    "cribsheet": "bin/cribsheet.js"
   },
-  "keywords": ["agents.md", "markdown", "merge"],
+  "exports": "./src/index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/",
+    "prepublishOnly": "echo \"cribsheet is not published to npm; install from the repo with: npm i -g .\" >&2 && exit 1"
+  },
+  "keywords": [
+    "agents.md",
+    "markdown",
+    "merge"
+  ],
   "license": "MIT"
 }
