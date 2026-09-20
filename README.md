@@ -139,3 +139,23 @@ This repository manages its own `AGENTS.md` with cribsheet. The fragments are in
 
 No templating, no project scanning, no network, no shipped defaults, no sibling output files. It
 merges text you wrote, and it tells you when it cannot do that safely.
+
+## Prior art
+
+cribsheet was inspired by **[laravel/boost](https://github.com/laravel/boost)**, which established
+both the `.ai/` convention this tool adopts and the idea of assembling agent guidelines from
+reusable fragments rather than writing one long file by hand. Boost is the reason this tool has a
+shape to depart from.
+
+The departure is the safety model, not the idea. Boost treats its generated output as disposable
+and expects it to be gitignored, which is a coherent choice — if the file is always regenerated,
+there is nothing to protect. cribsheet assumes the opposite: `AGENTS.md` is committed, humans edit
+it directly, and so the tool has to prove it is not about to destroy someone's work before it
+writes. Everything distinctive here — the marked block, the content hash, the refusals — follows
+from that one inverted assumption.
+
+No boost code is used; the debt is to the design. Boost is MIT-licensed, as is this.
+
+Others working the same ground, none of which treat the output as a hand-edited file:
+[bearings](https://www.npmjs.com/package/bearings), [agentseed](https://www.npmjs.com/package/agentseed),
+`@agents-dev/cli`, `@agents-mdx/cli`, `@momo792/agentsmd`.
