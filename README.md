@@ -147,6 +147,11 @@ both the `.ai/` convention this tool adopts and the idea of assembling agent gui
 reusable fragments rather than writing one long file by hand. Boost is the reason this tool has a
 shape to depart from.
 
+**On Laravel?** Use [boost](https://github.com/laravel/boost). It generates guidelines from your
+actual project, ships an MCP server, and knows the framework — none of which this does. Reach for
+cribsheet only if you want to write the guidelines yourself and keep hand-editing the result. The
+two are not substitutes, and if boost covers you, you do not need this.
+
 The departure is the safety model, not the idea. Boost treats its generated output as disposable
 and expects it to be gitignored, which is a coherent choice — if the file is always regenerated,
 there is nothing to protect. cribsheet assumes the opposite: `AGENTS.md` is committed, humans edit
