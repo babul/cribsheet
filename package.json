@@ -1,0 +1,15 @@
+{
+  "name": "cribsheet",
+  "version": "0.0.1",
+  "description": "Compile AGENTS.md from reusable markdown fragments — without clobbering your hand edits.",
+  "type": "module",
+  "bin": { "cribsheet": "bin/cribsheet.js" },
+  "exports": "./src/index.js",
+  "engines": { "node": ">=22" },
+  "files": ["bin", "src", "README.md"],
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "keywords": ["agents.md", "markdown", "merge"],
+  "license": "MIT"
+}
