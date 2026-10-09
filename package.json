@@ -17,7 +17,7 @@
     "README.md"
   ],
   "scripts": {
-    "test": "node --test test/",
+    "test": "node --test \"test/*.test.js\"",
     "prepublishOnly": "echo \"cribsheet is not published to npm; install from the repo with: npm i -g .\" >&2 && exit 1"
   },
   "keywords": [
