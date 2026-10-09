@@ -38,7 +38,8 @@ export function plan(config, { force = false, allowEmpty = false } = {}) {
     return { ...base, status: STATUS.NOOP, exit: EXIT.OK, text: null };
   }
 
-  const block = renderBlock(compose(fragments));
+  const composed = compose(fragments);
+  const block = renderBlock(composed);
 
   if (existing === null) {
     return { ...base, status: STATUS.NEW, exit: EXIT.OK, text: `${block}\n` };
@@ -59,18 +60,21 @@ export function plan(config, { force = false, allowEmpty = false } = {}) {
       status: STATUS.REFUSED,
       exit: EXIT.REFUSED,
       reason: `${label} has markers but no sha. Treating it as unmanaged rather than guessing what is safe to replace.`,
-      lostDiff: unifiedDiff(found.body, compose(fragments), `${label} (current)`, `${label} (would become)`),
+      lostDiff: unifiedDiff(found.body, composed, `${label} (current)`, `${label} (would become)`),
     };
   }
 
+  // §6.1 case 5: a stale sha over a body that already equals the composition
+  // loses nothing when rewritten, so only a body that differs is refused.
   const actual = hashBody(found.body);
-  if (actual !== found.sha && !force) {
+  const matchesFragments = found.body.trim() === composed.trim();
+  if (actual !== found.sha && !force && !matchesFragments) {
     return {
       ...base,
       status: STATUS.REFUSED,
       exit: EXIT.REFUSED,
       reason: `${label} has been hand-edited inside the managed block (sha ${found.sha} != ${actual}). Re-run with --force to overwrite.`,
-      lostDiff: unifiedDiff(found.body, compose(fragments), `${label} (current)`, `${label} (would become)`),
+      lostDiff: unifiedDiff(found.body, composed, `${label} (current)`, `${label} (would become)`),
     };
   }
 

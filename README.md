@@ -52,8 +52,10 @@ Hand-written notes below. Also never touched.
 ```
 
 The `sha` records what cribsheet last wrote. If the block no longer matches it, someone edited the
-output by hand, and cribsheet stops with exit 2 and a diff rather than overwriting the edit. Pass
-`--force` when you mean it.
+output by hand, and cribsheet stops with exit 2 and a diff rather than overwriting the edit. Move
+the edit into the fragment it belongs in: once the block matches what the fragments compose,
+cribsheet replaces it without `--force`, keeping that content and updating the `sha`. Pass
+`--force` only when you mean to discard the edit.
 
 ## Ordering
 

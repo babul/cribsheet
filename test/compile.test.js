@@ -64,6 +64,34 @@ test('a hand-edited block is refused with exit 2 and a diff', (t) => {
   t.assert.match(err.diff, /-hand edited/);
 });
 
+test('a hand-edited block that matches the fragments is replaced without --force', (t) => {
+  const root = tmpProject({ [`${G}/00-a.md`]: 'body' });
+  compile(cfg(root));
+  const edited = `Preamble.\n\n${read(root).replace('body', 'moved')}`;
+  fs.writeFileSync(path.join(root, 'AGENTS.md'), edited);
+  fs.writeFileSync(path.join(root, G, '00-a.md'), 'moved');
+
+  const r = compile(cfg(root));
+  t.assert.strictEqual(r.status, STATUS.REPLACED);
+  t.assert.strictEqual(r.exit, EXIT.OK);
+  const out = read(root);
+  const { sha, body } = findBlock(out);
+  t.assert.strictEqual(sha, hashBody(body));
+  const withoutSha = (s) => s.replace(/sha=[0-9a-f]+/, 'sha=');
+  t.assert.strictEqual(withoutSha(out), withoutSha(edited));
+});
+
+test('a hand-edited block that differs from the fragments is still refused', (t) => {
+  const root = tmpProject({ [`${G}/00-a.md`]: 'body' });
+  compile(cfg(root));
+  const edited = read(root).replace('body', 'moved');
+  fs.writeFileSync(path.join(root, 'AGENTS.md'), edited);
+  fs.writeFileSync(path.join(root, G, '00-a.md'), 'moved, then changed');
+
+  throwsWithCode(t, () => compile(cfg(root)), EXIT.REFUSED, /hand-edited/);
+  t.assert.strictEqual(read(root), edited);
+});
+
 test('--force overwrites a hand-edited block', (t) => {
   const root = tmpProject({ [`${G}/00-a.md`]: 'body' });
   compile(cfg(root));
@@ -220,6 +248,17 @@ test('check on a hand-edited block is exit 2', (t) => {
   compile(cfg(root));
   fs.writeFileSync(path.join(root, 'AGENTS.md'), read(root).replace('body', 'edited'));
   throwsWithCode(t, () => check(cfg(root)), EXIT.REFUSED);
+});
+
+test('check on a hand-edited block that matches the fragments is exit 1, not 2', (t) => {
+  const root = tmpProject({ [`${G}/00-a.md`]: 'body' });
+  compile(cfg(root));
+  const edited = read(root).replace('body', 'moved');
+  fs.writeFileSync(path.join(root, 'AGENTS.md'), edited);
+  fs.writeFileSync(path.join(root, G, '00-a.md'), 'moved');
+
+  t.assert.strictEqual(check(cfg(root)).exit, EXIT.STALE);
+  t.assert.strictEqual(read(root), edited);
 });
 
 test('check writes nothing', (t) => {

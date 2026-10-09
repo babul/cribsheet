@@ -116,6 +116,17 @@ test('check is exit 2 on a hand-edited block and prints a diff', (t) => {
   t.assert.match(r.stderr, /-edited/);
 });
 
+test('a hand edit moved into its fragment: check is exit 1, then compile is exit 0', (t) => {
+  const root = tmpProject({ [`${G}/00-a.md`]: 'body' });
+  runBoth(root, []);
+  const f = path.join(root, 'AGENTS.md');
+  fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace('body', 'edited'));
+  fs.writeFileSync(path.join(root, G, '00-a.md'), 'edited');
+  t.assert.strictEqual(runBoth(root, ['check']).code, 1);
+  t.assert.strictEqual(runBoth(root, []).code, 0);
+  t.assert.strictEqual(runBoth(root, ['check']).code, 0);
+});
+
 test('a malformed config is exit 3', (t) => {
   const root = tmpProject({ '.ai/config.json': '{"nope":1}', [`${G}/00-a.md`]: 'b' });
   const r = runBoth(root, []);

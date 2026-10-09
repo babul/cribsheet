@@ -267,11 +267,18 @@ Malformed marker sets are exit 3, not a guess:
 | 2 | Exists, no markers | Append the block at the end, one blank line clear. `NEW` |
 | 3 | Markers, stored `sha` matches the current body | Replace. `REPLACED`, or `UNCHANGED` if identical |
 | 4 | Markers, **no** `sha` | Unmanaged. Refuse, exit 2 |
-| 5 | Markers, stored `sha` does **not** match | Hand-edited. Refuse, print the diff, exit 2. `--force` overrides |
+| 5 | Markers, stored `sha` does **not** match, body differs from the composition | Hand-edited. Refuse, print the diff, exit 2. `--force` overrides |
+| 5a | Markers, stored `sha` does **not** match, body equals the composition | Replace. The hashed content is unchanged; the `sha` is updated. `REPLACED`. Nothing can be lost |
 | 6 | Zero fragments **and** a populated block exists | Refuse, exit 2. `--allow-empty` overrides |
 
 Cases 5 and 6 are the point. Case 6 catches a wrong `--dir`, a bad working directory, or a botched
 merge — situations where compiling would leave agents reading guidelines that no longer exist.
+
+Case 5a is the end of recovering from case 5. Once the hand edit has been moved into a fragment,
+the block's trimmed body is byte-identical to the composition. The rewrite leaves that content
+as it is and updates the `sha` (re-rendering may also tidy whitespace at the block's edges and the
+marker lines, which the hash ignores), so it needs no `--force`. The comparison uses the same trimmed raw bytes the hash covers,
+never a normalised form, so any difference at all is still case 5.
 
 **On formatters.** Prettier and friends will reformat `AGENTS.md` and break the sha on a change no
 human made, and case 5 will fire. Exclude the output from your formatters — add it to
@@ -363,7 +370,8 @@ diff first".
 | Markers, sha matches, content differs | `REPLACED`, 0 | 1 |
 | Markers, sha matches, content identical | `UNCHANGED`, 0 | 0 |
 | Markers, no sha | `REFUSED`, 2 | 2 |
-| Markers, sha mismatch | `REFUSED`, 2 | 2 |
+| Markers, sha mismatch, body differs from the composition | `REFUSED`, 2 | 2 |
+| Markers, sha mismatch, body equals the composition | `REPLACED`, 0 | 1 |
 | Zero fragments, no block | `NOOP`, 0 | 0 |
 | Zero fragments, populated block | `REFUSED`, 2 | 2 |
 
