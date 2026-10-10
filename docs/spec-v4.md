@@ -3,7 +3,7 @@
 > Compile AGENTS.md from reusable markdown fragments — without clobbering your hand edits.
 
 **Status:** v2, as implemented
-**Package:** `cribsheet` (npm), with `crib-sheet` held as an alias — see Appendix A
+**Package:** `cribsheet` (npm) — see Appendix A
 
 Supersedes [`spec-v1.md`](spec-v1.md). Every decision recorded here was argued in
 [`spec-v3.md`](spec-v3.md); this document states the conclusions without the reasoning, and matches
@@ -485,9 +485,14 @@ since globs cannot be encoded in a filename.
 
 ## Appendix A — Naming
 
-**Settled:** `cribsheet`. Both `cribsheet` and `crib-sheet` were unpublished as of 2026-09-19, so
-the name clears npm's similarity check in either form. Claim both — publish the hyphenated form as
-a stub pointing at the real package, with a real README, so a wrong guess does not land on a 404.
+**Settled:** `cribsheet`. Both `cribsheet` and `crib-sheet` were unpublished as of 2026-09-19, and
+no other package collided with either form. The real package shipped as `1.1.0` because a `1.0.0`
+placeholder claimed the name first; that placeholder is deprecated.
+
+**`crib-sheet` is not published, and needs no stub.** Publishing it was refused (403, "too similar
+to existing package cribsheet") even from the account that owns `cribsheet`. The similarity check
+that blocks the owner blocks a squatter too, so the hyphenated name is protected without a package.
+A wrong guess lands on a 404 rather than on someone else's package.
 
 **On npm's similarity check:** names are normalized by stripping punctuation and case, so `foo-bar`
 and `foobar` collide. Two names rejected on this basis:
@@ -495,7 +500,8 @@ and `foobar` collide. Two names rejected on this basis:
 - `fieldguide` — collides with `field-guide` (design-system docs generator, v3.1.0, 2025-05)
 - `agentsmd` — blocked by typosquat protection, unclaimable unscoped
 
-The exact rules are not publicly documented, so confirm by publishing a stub `0.0.1` first.
+The exact rules are not publicly documented, so confirm a candidate name by publishing a stub
+`0.0.1` first.
 
 **Also verified clear** as fallbacks: `keycard`, `dogtag`, `agentfile`, `agents-cli`.
 
