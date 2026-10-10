@@ -461,9 +461,9 @@ directory's `.ai/` and write to the wrong file.
 ## 9. Distribution
 
 - Published to npm, runnable via `npx` and installable globally.
-- **Zero runtime dependencies.** Node 22 supplies `path.matchesGlob` and `node:crypto`; the unified
+- **Zero runtime dependencies.** Node 22.5+ supplies `path.matchesGlob` and `node:crypto`; the unified
   diff is hand-rolled. A trust-first tool with a large transitive tree undercuts its own pitch.
-- **Node 22+**, ESM. Tests use `node:test`.
+- **Node 22.5+**, ESM. Tests use `node:test`.
 - **No `postinstall` hook.** Hooks that write into a working tree are viewed with suspicion, and
   many teams run `--ignore-scripts`.
 - Recommended integration is `check` in CI or a pre-commit hook, not an automatic write. The output

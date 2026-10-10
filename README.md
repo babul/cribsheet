@@ -15,7 +15,7 @@ npx cribsheet          # one-off
 npm i -g cribsheet     # or install it
 ```
 
-Requires Node 22+. No dependencies.
+Requires Node 22.5+. No dependencies.
 
 ## Use
 

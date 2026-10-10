@@ -1,15 +1,14 @@
 {
   "name": "cribsheet",
-  "version": "0.0.1",
+  "version": "1.1.0",
   "description": "Compile AGENTS.md from reusable markdown fragments — without clobbering your hand edits.",
-  "private": true,
   "type": "module",
   "bin": {
     "cribsheet": "bin/cribsheet.js"
   },
   "exports": "./src/index.js",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.5.0"
   },
   "files": [
     "bin",
@@ -18,12 +17,18 @@
   ],
   "scripts": {
     "test": "node --test \"test/*.test.js\"",
-    "prepublishOnly": "echo \"cribsheet is not published to npm; install from the repo with: npm i -g .\" >&2 && exit 1"
+    "prepublishOnly": "npm test"
   },
   "keywords": [
     "agents.md",
     "markdown",
     "merge"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/babul/cribsheet.git"
+  },
+  "homepage": "https://github.com/babul/cribsheet#readme",
+  "bugs": "https://github.com/babul/cribsheet/issues",
   "license": "MIT"
 }
